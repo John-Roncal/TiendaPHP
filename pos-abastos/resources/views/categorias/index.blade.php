@@ -2,6 +2,11 @@
 
 @section('content')
 <div class="container">
+    @if(session('success'))
+        <div class="alert alert-success">
+            {{ session('success') }}
+        </div>
+    @endif
     <h2>Categorías</h2>
     <a href="/categorias/crear" class="btn btn-primary mb-3">Nueva Categoría</a>
 
