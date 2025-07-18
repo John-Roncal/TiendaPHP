@@ -15,7 +15,8 @@ class CategoriaController extends Controller
     public function store(Request $request)
     {
         $request->validate(['nombre' => 'required|string|max:100']);
-        return Categoria::create($request->all());
+        Categoria::create($request->all());
+        return redirect('/categorias')->with('success', 'Categoría creada correctamente');
     }
 
     public function show($id)
@@ -27,12 +28,13 @@ class CategoriaController extends Controller
     {
         $categoria = Categoria::findOrFail($id);
         $categoria->update($request->all());
-        return $categoria;
+        return redirect('/categorias')->with('success', 'Categoría actualizada correctamente');
     }
 
     public function destroy($id)
     {
-        return Categoria::destroy($id);
+        Categoria::destroy($id);
+        return redirect('/categorias')->with('success', 'Categoría eliminada correctamente');
     }
 
     public function indexBlade()
