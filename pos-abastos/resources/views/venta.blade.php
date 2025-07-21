@@ -31,7 +31,6 @@
         <button class="btn btn-success" id="btnRegistrarVenta">Registrar Venta</button>
     </div>
 </div>
-
 <script>
     let productos = [];
     let carrito = [];
@@ -56,24 +55,24 @@
 
     // Agregar producto al carrito
     function agregarProductoAlCarrito(producto) {
-    const existente = carrito.find(p => p.id === producto.id);
-    const precioNum = Number(producto.precio);
+        const existente = carrito.find(p => p.id === producto.id);
+        const precioNum = Number(producto.precio);
 
-    if (existente) {
-        existente.cantidad++;
-        existente.subtotal = existente.cantidad * precioNum;
-    } else {
-        carrito.push({
-            id: producto.id,
-            nombre: producto.nombre,
-            precio: precioNum,
-            cantidad: 1,
-            subtotal: precioNum
-        });
+        if (existente) {
+            existente.cantidad++;
+            existente.subtotal = existente.cantidad * precioNum;
+        } else {
+            carrito.push({
+                id: producto.id,
+                nombre: producto.nombre,
+                precio: precioNum,
+                cantidad: 1,
+                subtotal: precioNum
+            });
+        }
+
+        renderTabla();
     }
-
-    renderTabla();
-}
 
     function renderTabla() {
         const cuerpo = document.getElementById('tablaVenta');
@@ -124,7 +123,16 @@
         });
 
         if (res.ok) {
+            // Guardar la última venta para imprimir
+            const total = carrito.reduce((sum, item) => sum + item.subtotal, 0);
+            const venta = {
+                detalles: carrito,
+                total: total
+            };
+            localStorage.setItem('ultimaVenta', JSON.stringify(venta));
+
             alert('Venta registrada exitosamente');
+            imprimirTicket(); // Llamar impresión
             carrito = [];
             renderTabla();
         } else {
@@ -134,6 +142,41 @@
     });
 
     cargarProductos();
+
+    // Función de impresión
+    function imprimirTicket() {
+        const venta = JSON.parse(localStorage.getItem('ultimaVenta'));
+
+        if (!venta) {
+            alert("No hay venta reciente para imprimir.");
+            return;
+        }
+
+        let contenido = `
+            <div style="font-family: monospace; font-size: 12px;">
+                <h3>🛒 TICKET DE VENTA</h3>
+                <p>Fecha: ${new Date().toLocaleString()}</p>
+                <hr>
+        `;
+
+        venta.detalles.forEach(item => {
+            contenido += `<p>${item.nombre} x${item.cantidad} - S/ ${item.precio.toFixed(2)}</p>`;
+        });
+
+        contenido += `
+                <hr>
+                <p><strong>Total: S/ ${venta.total.toFixed(2)}</strong></p>
+                <p>¡Gracias por su compra!</p>
+            </div>
+        `;
+
+        const ventana = window.open('', '', 'width=300,height=500');
+        ventana.document.write(contenido);
+        ventana.document.close();
+        ventana.focus();
+        ventana.print();
+        ventana.close();
+    }
 </script>
 </body>
 </html>
