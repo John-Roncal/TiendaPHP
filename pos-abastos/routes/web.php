@@ -4,11 +4,19 @@ use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\ProductoController;
 use App\Http\Controllers\CategoriaController;
 use App\Http\Controllers\VentaController;
+use App\Http\Controllers\DashboardController;
 
 // Vista de ventas
+Route::get('/', function () {
+    return view('venta');
+});
+
 Route::get('/venta', function () {
     return view('venta');
 });
+
+// Ruta para el dashboard
+Route::get('/dashboard', [DashboardController::class, 'index']);
 
 // Rutas para productos (rutas fijas primero)
 Route::get('/productos/crear', [ProductoController::class, 'create']);

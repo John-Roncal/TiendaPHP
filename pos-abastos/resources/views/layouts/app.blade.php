@@ -13,6 +13,7 @@
             <a class="nav-link text-white" href="/productos">Productos</a>
             <a class="nav-link text-white" href="/categorias">Categorías</a>
             <a class="nav-link text-white" href="/venta">Ventas</a>
+            <a class="nav-link text-white" href="/dashboard">Dashboard</a>
         </div>
     </nav>
     @yield('content')
